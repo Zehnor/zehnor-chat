@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Chat Twitch Zehnor</title>
+
+<script src="https://cdn.jsdelivr.net/npm/tmi.js@1.8.5/dist/tmi.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  background: transparent;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+#chat {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 95%;
+}
+
+.message {
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+  color: white;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.user {
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+<div id="chat"></div>
+
+<script>
+const chat = document.getElementById('chat');
+
+const client = new tmi.Client({
+  channels: ['zehnor']
+});
+
+client.connect();
+
+client.on('message', (channel, tags, message, self) => {
+  if (self) return;
+
+  const msg = document.createElement('div');
+  msg.className = 'message';
+
+  const color = tags.color || '#ffffff';
+
+  msg.innerHTML = `
+    <span class="user" style="color:${color}">
+      ${tags['display-name']}:
+    </span>
+    ${message}
+  `;
+
+  chat.appendChild(msg);
+
+  setTimeout(() => {
+    msg.style.opacity = '0';
+    setTimeout(() => msg.remove(), 500);
+  }, 10000);
+});
+</script>
+</body>
+</html>
