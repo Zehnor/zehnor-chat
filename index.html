@@ -49,6 +49,11 @@ body {
 const chat = document.getElementById('chat');
 
 const client = new tmi.Client({
+  connection: { secure: true, reconnect: true },
+  identity: {
+    username: 'zehnor',
+    password: 'oauth:COLLE_TON_TOKEN_ICI'
+  },
   channels: ['zehnor']
 });
 
